@@ -18,12 +18,14 @@ public class HairAnchor : MonoBehaviour
     void Update()
     {
         Transform pieceToFollow = hairAnchor;
+        float t = 1f - Mathf.Exp(-lerpSpeed * Time.deltaTime);
+
         foreach(Transform hairPart in hairParts)
         {
             if(!hairPart.Equals(hairAnchor))
             {
                 Vector2 targetPosition = (Vector2) pieceToFollow.position + partOffset;
-                Vector2 newPostionLerp = Vector2.Lerp(hairPart.position, targetPosition, Time.deltaTime * lerpSpeed);
+                Vector2 newPostionLerp = Vector2.Lerp(hairPart.position, targetPosition, t);
 
                 hairPart.position = newPostionLerp;
                 pieceToFollow = hairPart;
