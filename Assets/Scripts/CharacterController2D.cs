@@ -11,6 +11,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class CharacterController2D : MonoBehaviour
 {
+    [Header("Hair Offsets (Assume facing right)")]
+    [SerializeField] private Vector2 idleOffset;
+    [SerializeField] private Vector2 runOffset;
+    [SerializeField] private Vector2 jumpOffset;
+    [SerializeField] private Vector2 fallOffset;
+
+    [Header("Hair Anchor")]
+    [SerializeField] private HairAnchor hairAnchor;
 
     [Header("Movement Params")]
     public float runSpeed = 6.0f;
@@ -76,8 +84,44 @@ public class CharacterController2D : MonoBehaviour
 
         UpdateFacingDirection();
 
+        UpdateHairOffset();
+
         UpdateAnimator();
 
+    }
+
+    private void UpdateHairOffset()
+    {
+        Vector2 currentOffset = Vector2.zero;
+
+        // idle
+        if(rb.linearVelocityX == 0 && rb.linearVelocityY == 0)
+        {
+            currentOffset = idleOffset;
+        }
+        // jump
+        else if(rb.linearVelocityY > 0.1f)
+        {
+            currentOffset = jumpOffset;
+        }
+        // fall
+        else if(rb.linearVelocityY < -0.1f)
+        {
+            currentOffset = fallOffset;
+        }
+        // run
+        if(Mathf.Abs(rb.linearVelocityX) > 0.1f)
+        {
+            currentOffset = runOffset;
+        }
+
+        if(!facingRight)
+        {
+            currentOffset.x *= -1;
+        }
+         
+
+        hairAnchor.partOffset = currentOffset;
     }
 
     private void UpdateIsGrounded()
@@ -104,7 +148,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void HandleHorizontalMovement()
     {
-        rb.velocity = new Vector2(moveDirection.x * runSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveDirection.x * runSpeed, rb.linearVelocity.y);
     }
 
     private void HandleJumping()
@@ -113,7 +157,7 @@ public class CharacterController2D : MonoBehaviour
         {
             isGrounded = false;
             jumpPressed = false;
-            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpSpeed);
         }
     }
 
@@ -144,8 +188,8 @@ public class CharacterController2D : MonoBehaviour
     private void UpdateAnimator()
     {
         animator.SetBool("isGrounded", isGrounded);
-        animator.SetFloat("movementX", rb.velocity.x);
-        animator.SetFloat("movementY", rb.velocity.y);
+        animator.SetFloat("movementX", rb.linearVelocity.x);
+        animator.SetFloat("movementY", rb.linearVelocity.y);
     }
 
 }
