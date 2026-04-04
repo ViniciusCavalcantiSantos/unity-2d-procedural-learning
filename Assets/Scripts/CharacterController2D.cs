@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 // This script is a basic 2D character controller that allows
@@ -92,27 +93,34 @@ public class CharacterController2D : MonoBehaviour
 
     private void UpdateHairOffset()
     {
-        Vector2 currentOffset = Vector2.zero;
+        const float VELOCITY_THRESHOLD = 0.1f;
 
-        // idle
-        if(rb.linearVelocityX == 0 && rb.linearVelocityY == 0)
+        float velX = rb.linearVelocity.x;
+        float velY = rb.linearVelocity.y;
+
+        bool tryingToMove = Math.Abs(moveDirection.x) > VELOCITY_THRESHOLD;
+        bool movingHorizontally = Math.Abs(velX) > VELOCITY_THRESHOLD;
+        bool isAirbone = !isGrounded;
+        bool isRising = velY > VELOCITY_THRESHOLD;
+        bool isFalling = velY < -VELOCITY_THRESHOLD;
+
+
+        Vector2 currentOffset;
+        if(isAirbone)
+        {
+            currentOffset = isRising ? jumpOffset : fallOffset;
+            if(movingHorizontally || tryingToMove)
+            {
+                float airBlend = Mathf.Clamp01(Mathf.Abs(velX) / runSpeed);
+                currentOffset = Vector2.Lerp(currentOffset, runOffset, airBlend * 0.5f);
+            }
+        } else if(movingHorizontally || tryingToMove)
+        {
+            float speedRatio = Mathf.Clamp01(Mathf.Abs(velX) / runSpeed);
+            currentOffset = Vector2.Lerp(idleOffset, runOffset, speedRatio);
+        } else
         {
             currentOffset = idleOffset;
-        }
-        // jump
-        else if(rb.linearVelocityY > 0.1f)
-        {
-            currentOffset = jumpOffset;
-        }
-        // fall
-        else if(rb.linearVelocityY < -0.1f)
-        {
-            currentOffset = fallOffset;
-        }
-        // run
-        if(Mathf.Abs(rb.linearVelocityX) > 0.1f)
-        {
-            currentOffset = runOffset;
         }
 
         if(!facingRight)
@@ -120,7 +128,6 @@ public class CharacterController2D : MonoBehaviour
             currentOffset.x *= -1;
         }
          
-
         hairAnchor.partOffset = currentOffset;
     }
 
