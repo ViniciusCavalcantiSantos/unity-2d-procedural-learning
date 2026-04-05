@@ -28,17 +28,11 @@ public class CharacterController : MonoBehaviour
 
     public bool facingRight = true;
 
-    [Header("Sensors Offset")]
-    private Transform floorCheckLeft;
-    private Transform floorCheckRight;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
-        floorCheckLeft = transform.Find("Sensors/FloorCheckLeft");
-        floorCheckRight = transform.Find("Sensors/FloorCheckRight");
     }
     void Awake()
     {
@@ -119,11 +113,14 @@ public class CharacterController : MonoBehaviour
 
     private void UpdateIsGrounded()
     {
-        Debug.DrawRay(floorCheckLeft.position, Vector2.down * 0.1f, Color.red);
-        Debug.DrawRay(floorCheckRight.position, Vector2.down * 0.1f, Color.red);
+        Vector2 floorCheckLeft = new Vector2(boxCollider.bounds.min.x + 0.005f, boxCollider.bounds.min.y);
+        Vector2 floorCheckRight = new Vector2(boxCollider.bounds.max.x - 0.005f, boxCollider.bounds.min.y);
 
-        RaycastHit2D hitLeft = Physics2D.Raycast(floorCheckLeft.position, Vector2.down, 0.1f, GameLayers.Ground);
-        RaycastHit2D hitRight = Physics2D.Raycast(floorCheckRight.position, Vector2.down, 0.1f, GameLayers.Ground);
+        Debug.DrawRay(floorCheckLeft, Vector2.down * 0.1f, Color.red);
+        Debug.DrawRay(floorCheckRight, Vector2.down * 0.1f, Color.red);
+
+        RaycastHit2D hitLeft = Physics2D.Raycast(floorCheckLeft, Vector2.down, 0.1f, GameLayers.Ground);
+        RaycastHit2D hitRight = Physics2D.Raycast(floorCheckRight, Vector2.down, 0.1f, GameLayers.Ground);
 
         if (hitLeft.collider != null || hitRight.collider != null)
         {
