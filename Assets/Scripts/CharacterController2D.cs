@@ -19,7 +19,7 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] private Vector2 fallOffset;
 
     [Header("Hair Anchor")]
-    [SerializeField] private HairAnchor hairAnchor;
+    [SerializeField] private HairAnchorOld hairAnchor;
 
     [Header("Movement Params")]
     public float runSpeed = 6.0f;
@@ -71,12 +71,12 @@ public class CharacterController2D : MonoBehaviour
         else if (context.canceled)
         {
             moveDirection = context.ReadValue<Vector2>();
-        } 
+        }
     }
 
     private void FixedUpdate()
     {
-        
+
         UpdateIsGrounded();
 
         HandleHorizontalMovement();
@@ -106,28 +106,30 @@ public class CharacterController2D : MonoBehaviour
 
 
         Vector2 currentOffset;
-        if(isAirbone)
+        if (isAirbone)
         {
             currentOffset = isRising ? jumpOffset : fallOffset;
-            if(movingHorizontally || tryingToMove)
+            if (movingHorizontally || tryingToMove)
             {
                 float airBlend = Mathf.Clamp01(Mathf.Abs(velX) / runSpeed);
                 currentOffset = Vector2.Lerp(currentOffset, runOffset, airBlend * 0.5f);
             }
-        } else if(movingHorizontally || tryingToMove)
+        }
+        else if (movingHorizontally || tryingToMove)
         {
             float speedRatio = Mathf.Clamp01(Mathf.Abs(velX) / runSpeed);
             currentOffset = Vector2.Lerp(idleOffset, runOffset, speedRatio);
-        } else
+        }
+        else
         {
             currentOffset = idleOffset;
         }
 
-        if(!facingRight)
+        if (!facingRight)
         {
             currentOffset.x *= -1;
         }
-         
+
         hairAnchor.partOffset = currentOffset;
     }
 
