@@ -37,7 +37,19 @@ public class HairAnchor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector2 windStrength = new Vector2(windStrengthX, windStrengthY);
+        Vector2 windVelocity = windStrength * maxWindVelocity;
+        float windMag = Mathf.Clamp(windStrength.magnitude, 0f, 1.0f);
+        Vector2 characterSpeed = character.GetComponent<Rigidbody2D>().linearVelocity;
 
+        foreach (Transform hairSegment in hairSegments)
+        {
+            Vector2 positionOffset = Vector2.Lerp(
+                hairSegmentOffset,
+                new Vector2(Mathf.Abs(hairSegmentOffset.x), Mathf.Abs(hairSegmentOffset.y)),
+                windMag
+            );
+        }
     }
 
     [ContextMenu("Generate Hair Segments")]
@@ -65,6 +77,8 @@ public class HairAnchor : MonoBehaviour
             hairSegment.transform.SetParent(hairAnchor);
             SpriteRenderer sr = hairSegment.AddComponent<SpriteRenderer>();
             sr.sprite = hairSegmentSprite;
+            sr.sortingOrder = -i - 1;
+            sr.color = new Color(182f / 255f, 61f / 255f, 67f / 255f);
 
             hairSegment.transform.localPosition = previousHairPosition + hairSegmentOffset;
             previousHairPosition = hairSegment.transform.localPosition;
@@ -75,16 +89,9 @@ public class HairAnchor : MonoBehaviour
                 Vector2.one * hairSizeMin,
                 scalePercent
             );
+            skipNextPhysicsUpdate = true;
 
-            // hairSegment.transform.localPosition = previousHairPosition + hairSegmentOffset;
-            // hairSegment.transform.localRotation = Quaternion.identity;
-
-            // SpriteRenderer sr = hairSegment.AddComponent<SpriteRenderer>();
-            // sr.sprite = hairSegmentSprite;
-            // float t = (float)i / (numberOfSegments - 1);
-            // sr.color = Color.Lerp(Color.black, Color.gray, t);
-
-            // previousHairPosition = hairSegment.transform.localPosition;
+            hairSegments[i] = hairSegment.transform;
         }
     }
 
