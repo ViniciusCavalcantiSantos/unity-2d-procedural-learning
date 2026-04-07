@@ -26,7 +26,7 @@ public class CharacterController : MonoBehaviour
     public bool isMovingLeft = false;
     public bool isMovingRight = false;
 
-    public bool facingRight = true;
+    public bool isFacingRight = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -99,13 +99,15 @@ public class CharacterController : MonoBehaviour
 
         // Rotaciona o personagem para a direção que ele está se movendo    
         Vector3 scale = transform.localScale;
-        if (isMovingRight)
+        if (isMovingLeft)
         {
-            scale.x = Mathf.Abs(scale.x);
+            scale.x = -Mathf.Abs(scale.x);
+            isFacingRight = false;
         }
         else
         {
-            scale.x = -Mathf.Abs(scale.x);
+            scale.x = Mathf.Abs(scale.x);
+            isFacingRight = true;
         }
 
         transform.localScale = scale;
