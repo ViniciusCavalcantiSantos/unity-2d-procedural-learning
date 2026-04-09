@@ -59,6 +59,7 @@ SpriteAtlas:
     - dcb60ec1bda79e35b82282cc2c94f36f: 21300000
     - 3d6449f19725eb79284c055b798a54a9: 21300000
     - 1885c212574ce94c4984002598e472cc: 21300000
+    - 9de88f62c2ed53bae843cf9ae8a9d7fb: 21300000
     - 2d7ca572ad472124e8cd5517363c3e6c: 21300000
     - be0deb7203cf904f0be77596fa1f6007: 21300000
     - 9d2bd1828860c0665bfe67ff3b4ca73a: 21300000
@@ -142,6 +143,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: dcb60ec1bda79e35b82282cc2c94f36f, type: 3}
   - {fileID: 21300000, guid: 3d6449f19725eb79284c055b798a54a9, type: 3}
   - {fileID: 21300000, guid: 1885c212574ce94c4984002598e472cc, type: 3}
+  - {fileID: 21300000, guid: 9de88f62c2ed53bae843cf9ae8a9d7fb, type: 3}
   - {fileID: 21300000, guid: 2d7ca572ad472124e8cd5517363c3e6c, type: 3}
   - {fileID: 21300000, guid: be0deb7203cf904f0be77596fa1f6007, type: 3}
   - {fileID: 21300000, guid: 9d2bd1828860c0665bfe67ff3b4ca73a, type: 3}
@@ -224,6 +226,7 @@ SpriteAtlas:
   - f4
   - f1
   - f11
+  - f0
   - f10
   - hair1
   - f0

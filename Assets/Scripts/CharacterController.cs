@@ -140,6 +140,20 @@ public class CharacterController : MonoBehaviour
             {
                 animator.SetBool("isFalling", true);
                 animator.SetBool("isJumping", false);
+
+                Debug.Log(!isFacingRight && hitLeftCenter.collider != null);
+                if (isFacingRight && hitRightCenter.collider != null)
+                {
+                    animator.SetBool("isWallSliding", true);
+                }
+                else if (!isFacingRight && hitLeftCenter.collider != null)
+                {
+                    animator.SetBool("isWallSliding", true);
+                }
+                else
+                {
+                    animator.SetBool("isWallSliding", false);
+                }
             }
         }
 
