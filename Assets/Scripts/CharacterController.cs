@@ -32,6 +32,15 @@ public class CharacterController : MonoBehaviour
     public bool isFacingRight = true;
     private bool previousFacingRight;
 
+
+    [Header("Debug")]
+    public bool showSensorRays = false;
+
+    private RaycastHit2D
+        hitDownLeft, hitDownCenter, hitDownRight,
+        hitRightUp, hitRightCenter, hitRightDown,
+        hitLeftUp, hitLeftCenter, hitLeftDown;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -69,6 +78,7 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        UpdateSensors();
         UpdateIsGrounded();
     }
 
@@ -120,18 +130,58 @@ public class CharacterController : MonoBehaviour
         transform.localScale = scale;
     }
 
-    private void UpdateIsGrounded()
+    private void UpdateSensors()
     {
+        float sensorSize = 0.05f;
+
+        // floor check
         Vector2 floorCheckLeft = new Vector2(boxCollider.bounds.min.x + 0.005f, boxCollider.bounds.min.y);
+        Vector2 floorCheckCenter = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.min.y);
         Vector2 floorCheckRight = new Vector2(boxCollider.bounds.max.x - 0.005f, boxCollider.bounds.min.y);
 
-        Debug.DrawRay(floorCheckLeft, Vector2.down * 0.1f, Color.red);
-        Debug.DrawRay(floorCheckRight, Vector2.down * 0.1f, Color.red);
+        hitDownLeft = Physics2D.Raycast(floorCheckLeft, Vector2.down, sensorSize, GameLayers.Ground);
+        hitDownCenter = Physics2D.Raycast(floorCheckCenter, Vector2.down, sensorSize, GameLayers.Ground);
+        hitDownRight = Physics2D.Raycast(floorCheckRight, Vector2.down, sensorSize, GameLayers.Ground);
 
-        RaycastHit2D hitLeft = Physics2D.Raycast(floorCheckLeft, Vector2.down, 0.1f, GameLayers.Ground);
-        RaycastHit2D hitRight = Physics2D.Raycast(floorCheckRight, Vector2.down, 0.1f, GameLayers.Ground);
+        // wall check right
+        Vector2 wallCheckRightUp = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y - 0.005f);
+        Vector2 wallCheckRightCenter = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.center.y);
+        Vector2 wallCheckRightDown = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.min.y + 0.005f);
 
-        if (hitLeft.collider != null || hitRight.collider != null)
+        hitRightUp = Physics2D.Raycast(wallCheckRightUp, Vector2.right, sensorSize, GameLayers.Ground);
+        hitRightCenter = Physics2D.Raycast(wallCheckRightCenter, Vector2.right, sensorSize, GameLayers.Ground);
+        hitRightDown = Physics2D.Raycast(wallCheckRightDown, Vector2.right, sensorSize, GameLayers.Ground);
+
+        // wall check left
+        Vector2 wallCheckLeftUp = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y - 0.005f);
+        Vector2 wallCheckLeftCenter = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.center.y);
+        Vector2 wallCheckLeftDown = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.min.y + 0.005f);
+
+        hitLeftUp = Physics2D.Raycast(wallCheckLeftUp, Vector2.left, sensorSize, GameLayers.Ground);
+        hitLeftCenter = Physics2D.Raycast(wallCheckLeftCenter, Vector2.left, sensorSize, GameLayers.Ground);
+        hitLeftDown = Physics2D.Raycast(wallCheckLeftDown, Vector2.left, sensorSize, GameLayers.Ground);
+
+        if (showSensorRays)
+        {
+            Debug.DrawRay(floorCheckLeft, Vector2.down * sensorSize, Color.red);
+            Debug.DrawRay(floorCheckCenter, Vector2.down * sensorSize, Color.red);
+            Debug.DrawRay(floorCheckRight, Vector2.down * sensorSize, Color.red);
+
+
+            Debug.DrawRay(wallCheckRightUp, Vector2.right * sensorSize, Color.red);
+            Debug.DrawRay(wallCheckRightCenter, Vector2.right * sensorSize, Color.red);
+            Debug.DrawRay(wallCheckRightDown, Vector2.right * sensorSize, Color.red);
+
+            Debug.DrawRay(wallCheckLeftUp, Vector2.left * sensorSize, Color.red);
+            Debug.DrawRay(wallCheckLeftCenter, Vector2.left * sensorSize, Color.red);
+            Debug.DrawRay(wallCheckLeftDown, Vector2.left * sensorSize, Color.red);
+        }
+    }
+
+    private void UpdateIsGrounded()
+    {
+
+        if (hitDownLeft.collider != null || hitDownRight.collider != null || hitDownCenter.collider != null)
         {
             isGrounded = true;
         }
