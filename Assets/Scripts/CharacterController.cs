@@ -12,6 +12,9 @@ public class CharacterController : MonoBehaviour
     public float speed = 0f;
     public float acceleration = 20f;
     public float deceleration = 30f;
+    public float airacceleration = 15f;
+    public float airDeceleration = 2f;
+
     public float maxSpeed = 5f;
 
     public float jumpForce = 6f;
@@ -182,14 +185,17 @@ public class CharacterController : MonoBehaviour
         moveDirection = input.Player.Move.ReadValue<Vector2>();
         float horizontal = moveDirection.x;
 
+        float currentAcceleration = isGrounded ? acceleration : airacceleration;
+        float currentDeceleration = isGrounded ? deceleration : airDeceleration;
+
         if (horizontal != 0)
         {
-            speed += horizontal * acceleration * Time.deltaTime;
+            speed += horizontal * currentAcceleration * Time.deltaTime;
             animator.SetBool("isRunning", true);
         }
         else
         {
-            speed = Mathf.MoveTowards(speed, 0, deceleration * Time.deltaTime);
+            speed = Mathf.MoveTowards(speed, 0, currentDeceleration * Time.deltaTime);
             animator.SetBool("isRunning", false);
         }
         speed = Mathf.Clamp(speed, -maxSpeed, maxSpeed);
