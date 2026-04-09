@@ -27,12 +27,14 @@ public class CharacterController : MonoBehaviour
     public bool isMovingRight = false;
 
     public bool isFacingRight = true;
+    private bool previousFacingRight;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+        previousFacingRight = isFacingRight;
     }
     void Awake()
     {
@@ -71,30 +73,25 @@ public class CharacterController : MonoBehaviour
     {
         animator.SetBool("isGrounded", isGrounded);
 
-        // Se estiver no chão, forçamos o desligamento das animações aéreas
+
         if (isGrounded)
         {
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", false);
         }
-        else // SE ESTIVER NO AR:
+        else
         {
+            animator.SetBool("isRunning", false);
             if (isMovingUp)
             {
                 animator.SetBool("isJumping", true);
                 animator.SetBool("isFalling", false);
-                animator.SetBool("isRunning", false);
             }
             else if (isMovingDown)
             {
                 animator.SetBool("isFalling", true);
                 animator.SetBool("isJumping", false);
-                animator.SetBool("isRunning", false);
             }
-            // NOTA: Não precisamos de um "else" aqui! 
-            // Se isMovingUp e isMovingDown forem FALSE (ápice do pulo), 
-            // o código ignora, e o Animator mantém o "isJumping" como TRUE
-            // até o personagem começar a cair.
         }
 
         // Rotaciona o personagem para a direção que ele está se movendo    
@@ -109,6 +106,13 @@ public class CharacterController : MonoBehaviour
             scale.x = Mathf.Abs(scale.x);
             isFacingRight = true;
         }
+
+
+        if (isFacingRight != previousFacingRight && Mathf.Abs(speed) > maxSpeed * 0.5f && isGrounded)
+        {
+            animator.SetTrigger("turn");
+        }
+        previousFacingRight = isFacingRight;
 
         transform.localScale = scale;
     }
