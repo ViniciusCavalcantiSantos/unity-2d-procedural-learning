@@ -92,17 +92,40 @@ public class CharacterController : MonoBehaviour
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", false);
 
-            if (hitDownLeft.collider == null && hitDownCenter.collider == null && !isFacingRight)
+            if (hitDownLeft.collider == null && hitDownCenter.collider == null)
             {
-                animator.SetBool("isOnEdge", true);
+                if (isFacingRight)
+                {
+                    // Está de costas na borda
+                    animator.SetBool("isOnEdge", false);
+                    animator.SetBool("isOnEdgeBack", true);
+                }
+                else
+                {
+                    // Está de frente na borda
+                    animator.SetBool("isOnEdge", true);
+                    animator.SetBool("isOnEdgeBack", false);
+                }
             }
-            else if (hitDownRight.collider == null && hitDownCenter.collider == null && isFacingRight)
+            else if (hitDownRight.collider == null && hitDownCenter.collider == null)
             {
-                animator.SetBool("isOnEdge", true);
+                if (isFacingRight)
+                {
+                    // Está de frente na borda
+                    animator.SetBool("isOnEdge", true);
+                    animator.SetBool("isOnEdgeBack", false);
+                }
+                else
+                {
+                    // Está de costas na borda
+                    animator.SetBool("isOnEdge", false);
+                    animator.SetBool("isOnEdgeBack", true);
+                }
             }
             else
             {
                 animator.SetBool("isOnEdge", false);
+                animator.SetBool("isOnEdgeBack", false);
             }
         }
         else
