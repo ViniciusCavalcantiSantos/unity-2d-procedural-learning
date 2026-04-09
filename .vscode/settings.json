@@ -52,5 +52,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "celeste-hair.slnx"
+    "dotnet.defaultSolution": "unity-2d-procedural-learning.slnx"
 }
