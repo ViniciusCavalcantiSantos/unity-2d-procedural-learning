@@ -336,6 +336,8 @@ MonoBehaviour:
   speed: 0
   acceleration: 20
   deceleration: 25
+  airacceleration: 15
+  airDeceleration: 2
   maxSpeed: 5
   jumpForce: 6
   isGrounded: 0
@@ -344,6 +346,7 @@ MonoBehaviour:
   isMovingLeft: 0
   isMovingRight: 0
   isFacingRight: 1
+  showSensorRays: 1
 --- !u!4 &233861296
 Transform:
   m_ObjectHideFlags: 0

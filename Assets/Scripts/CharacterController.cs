@@ -91,6 +91,19 @@ public class CharacterController : MonoBehaviour
         {
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", false);
+
+            if (hitDownLeft.collider == null && hitDownCenter.collider == null && !isFacingRight)
+            {
+                animator.SetBool("isOnEdge", true);
+            }
+            else if (hitDownRight.collider == null && hitDownCenter.collider == null && isFacingRight)
+            {
+                animator.SetBool("isOnEdge", true);
+            }
+            else
+            {
+                animator.SetBool("isOnEdge", false);
+            }
         }
         else
         {
